@@ -5,7 +5,7 @@
 Summary: General dimension convex hull programs
 Name: %{name}
 Version: %{version}
-Release: %{release}.1
+Release: %{release}.2
 License:  Distributable
 Group: System Environment/Libraries
 Source0: http://www.qhull.org/download/qhull-%{version}.tar.gz
