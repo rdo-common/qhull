@@ -1,6 +1,7 @@
 %define name qhull
 %define version 2003.1
-%define release 2
+%define release 3
+
 
 Summary: General dimension convex hull programs
 Name: %{name}
@@ -70,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 %_includedir/*
 
 %changelog
+* Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
+- rebuilt
+
 * Sun Aug 08 2004 Ralf Corsepius <ralf[AT]links2linux.de>	- 2003.1-0.fdr.2
 - Use default documentation installation scheme.
 
