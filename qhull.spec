@@ -1,6 +1,6 @@
 %define name qhull
 %define version 2003.1
-%define release 0.fdr.2
+%define release 2
 
 Summary: General dimension convex hull programs
 Name: %{name}
