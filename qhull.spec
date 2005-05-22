@@ -1,12 +1,7 @@
-%define name qhull
-%define version 2003.1
-%define release 3
-
-
 Summary: General dimension convex hull programs
-Name: %{name}
-Version: %{version}
-Release: %{release}
+Name: qhull
+Version: 2003.1
+Release: 4
 License:  Distributable
 Group: System Environment/Libraries
 Source0: http://www.qhull.org/download/qhull-%{version}.tar.gz
@@ -51,11 +46,9 @@ make DESTDIR=$RPM_BUILD_ROOT \
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post
-/sbin/ldconfig
+%post -p /sbin/ldconfig
 
-%postun
-/sbin/ldconfig
+%postun -p /sbin/ldconfig
 
 %files
 %defattr(-,root,root)
@@ -71,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 %_includedir/*
 
 %changelog
+* Sun May 22 2005 Jeremy Katz <katzj@redhat.com> - 2003.1-4
+- rebuild on all arches
+
 * Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
 - rebuilt
 
