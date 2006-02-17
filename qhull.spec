@@ -1,7 +1,7 @@
 Summary: General dimension convex hull programs
 Name: qhull
 Version: 2003.1
-Release: 4
+Release: 5%{?dist}
 License:  Distributable
 Group: System Environment/Libraries
 Source0: http://www.qhull.org/download/qhull-%{version}.tar.gz
@@ -32,10 +32,10 @@ about a point.
 
 %prep
 %setup -n %{name}-%{version}
-
+sed -i -e "s,\"../html/,\"html/,g" src/*.htm
 
 %build
-%configure
+%configure --disable-static
 make
 
 %install
@@ -64,6 +64,11 @@ rm -rf $RPM_BUILD_ROOT
 %_includedir/*
 
 %changelog
+* Fri Feb 17 2006 Ralf Corsépius <rc040203@freenet.de>	- 2003.1-5
+- Disable static libs.
+- Fixup some broken links in doc.
+- Add %%{?dist}.
+
 * Sun May 22 2005 Jeremy Katz <katzj@redhat.com> - 2003.1-4
 - rebuild on all arches
 
