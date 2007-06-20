@@ -1,7 +1,7 @@
 Summary: General dimension convex hull programs
 Name: qhull
 Version: 2003.1
-Release: 6%{?dist}
+Release: 7%{?dist}
 License:  Distributable
 Group: System Environment/Libraries
 Source0: http://www.qhull.org/download/qhull-%{version}.tar.gz
@@ -42,6 +42,7 @@ make
 rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT \
   docdir=%{_docdir}/%{name}-%{version} install
+rm -f ${RPM_BUILD_ROOT}/%{_libdir}/*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -59,11 +60,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-,root,root)
-%_libdir/*.*a
 %_libdir/*.so
 %_includedir/*
 
 %changelog
+* Wed Jun 20 2007 Ralf Corsépius <rc040203@freenet.de> - 2003.1-7
+- Remove *.la.
+
 * Tue Sep 05 2006 Ralf Corsépius <rc040203@freenet.de> - 2003.1-6
 - Mass rebuild.
 
