@@ -1,7 +1,7 @@
 Summary: General dimension convex hull programs
 Name: qhull
 Version: 2003.1
-Release: 8%{?dist}
+Release: 9%{?dist}
 License:  Distributable
 Group: System Environment/Libraries
 Source0: http://www.qhull.org/download/qhull-%{version}.tar.gz
@@ -64,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 %_includedir/*
 
 %changelog
+* Sun Feb 10 2008 Ralf Corsépius <rc040203@freenet.de> - 2003.1-9
+- Rebuild for gcc43.
+
 * Wed Aug 22 2007 Ralf Corsépius <rc040203@freenet.de> - 2003.1-8
 - Mass rebuild.
 
