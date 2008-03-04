@@ -1,10 +1,12 @@
 Summary: General dimension convex hull programs
 Name: qhull
 Version: 2003.1
-Release: 9%{?dist}
+Release: 10%{?dist}
 License:  Distributable
 Group: System Environment/Libraries
 Source0: http://www.qhull.org/download/qhull-%{version}.tar.gz
+Patch0: qhull-2003.1-alias.patch
+
 URL: http://www.qhull.org
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -32,6 +34,7 @@ about a point.
 
 %prep
 %setup -n %{name}-%{version}
+%patch0 -p1
 sed -i -e "s,\"../html/,\"html/,g" src/*.htm
 
 %build
@@ -64,6 +67,10 @@ rm -rf $RPM_BUILD_ROOT
 %_includedir/*
 
 %changelog
+* Tue Mar 04 2008 Ralf Corsépius <rc040203@freenet.de> - 2003.1-10
+- Add qhull-2003.1-alias.patch (BZ 432309)
+  Thanks to Orion Poplawski (orion@cora.nwra.com).
+
 * Sun Feb 10 2008 Ralf Corsépius <rc040203@freenet.de> - 2003.1-9
 - Rebuild for gcc43.
 
