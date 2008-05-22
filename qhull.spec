@@ -1,8 +1,8 @@
 Summary: General dimension convex hull programs
 Name: qhull
 Version: 2003.1
-Release: 10%{?dist}
-License:  Distributable
+Release: 11%{?dist}
+License: Qhull
 Group: System Environment/Libraries
 Source0: http://www.qhull.org/download/qhull-%{version}.tar.gz
 Patch0: qhull-2003.1-alias.patch
@@ -67,6 +67,9 @@ rm -rf $RPM_BUILD_ROOT
 %_includedir/*
 
 %changelog
+* Thu May 22 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 2003.1-11
+- fix license tag
+
 * Tue Mar 04 2008 Ralf Corsépius <rc040203@freenet.de> - 2003.1-10
 - Add qhull-2003.1-alias.patch (BZ 432309)
   Thanks to Orion Poplawski (orion@cora.nwra.com).
