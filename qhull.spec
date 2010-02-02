@@ -1,11 +1,12 @@
 Summary: General dimension convex hull programs
 Name: qhull
 Version: 2003.1
-Release: 13%{?dist}
+Release: 14%{?dist}
 License: Qhull
 Group: System Environment/Libraries
 Source0: http://www.qhull.org/download/qhull-%{version}.tar.gz
 Patch0: qhull-2003.1-alias.patch
+Patch1: http://www.qhull.org/download/qhull-2003.1-qh_gethash.patch
 
 URL: http://www.qhull.org
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -33,12 +34,16 @@ diagrams, furthest-site Voronoi diagrams, and halfspace intersections
 about a point.
 
 %prep
-%setup -n %{name}-%{version}
+%setup -q -n %{name}-%{version}
 %patch0 -p1
+%patch1 -p1
 sed -i -e "s,\"../html/,\"html/,g" src/*.htm
 
 %build
 %configure --disable-static
+sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
+sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
+
 make
 
 %install
@@ -67,6 +72,11 @@ rm -rf $RPM_BUILD_ROOT
 %_includedir/*
 
 %changelog
+* Tue Feb 02 2010 Ralf Corsépius <corsepiu@fedoraproject.org> - 2003.1-14
+- Apply upstream's qh_gethash patch
+- Silence %%setup.
+- Remove rpath.
+
 * Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2003.1-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
@@ -92,7 +102,7 @@ rm -rf $RPM_BUILD_ROOT
 * Tue Sep 05 2006 Ralf Corsépius <rc040203@freenet.de> - 2003.1-6
 - Mass rebuild.
 
-* Fri Feb 17 2006 Ralf Corsépius <rc040203@freenet.de>	- 2003.1-5
+* Fri Feb 17 2006 Ralf Corsépius <rc040203@freenet.de> - 2003.1-5
 - Disable static libs.
 - Fixup some broken links in doc.
 - Add %%{?dist}.
