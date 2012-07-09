@@ -1,15 +1,18 @@
 Summary: General dimension convex hull programs
 Name: qhull
 Version: 2003.1
-Release: 16%{?dist}
+Release: 17%{?dist}
 License: Qhull
 Group: System Environment/Libraries
 Source0: http://www.qhull.org/download/qhull-%{version}.tar.gz
 Patch0: qhull-2003.1-alias.patch
 Patch1: http://www.qhull.org/download/qhull-2003.1-qh_gethash.patch
+# Add pkgconfig support
+Patch2: qhull-2003.1-pkgconfig.patch
+# Misc. fixes related to 64bit compliance
+Patch3: qhull-2003.1-64bit.patch
 
 URL: http://www.qhull.org
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
@@ -37,6 +40,8 @@ about a point.
 %setup -q -n %{name}-%{version}
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
+%patch3 -p1
 sed -i -e "s,\"../html/,\"html/,g" src/*.htm
 
 %build
@@ -46,14 +51,20 @@ sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 
 make
 
+sed -e 's|@prefix@|%{_prefix}|' \
+  -e 's|@exec_prefix@|%{_exec_prefix}|' \
+  -e 's|@includedir@|%{_includedir}|' \
+  -e 's|@libdir@|%{_libdir}|' \
+  -e 's|@VERSION@|%{version}|' \
+  qhull.pc.in > qhull.pc
+
 %install
-rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT \
   docdir=%{_docdir}/%{name}-%{version} install
-rm -f ${RPM_BUILD_ROOT}/%{_libdir}/*.la
+rm -f ${RPM_BUILD_ROOT}%{_libdir}/*.la
 
-%clean
-rm -rf $RPM_BUILD_ROOT
+install -m644 -D qhull.pc ${RPM_BUILD_ROOT}%{_libdir}/pkgconfig/qhull.pc
+
 
 %post -p /sbin/ldconfig
 
@@ -68,10 +79,17 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-,root,root)
-%_libdir/*.so
-%_includedir/*
+%{_libdir}/*.so
+%{_libdir}/pkgconfig/qhull.pc
+%{_includedir}/*
+
 
 %changelog
+* Sun Jul 08 2012 Ralf Corsépius <corsepiu@fedoraproject.org> - 2003.1-17
+- Modernize spec.
+- Add qhull.pc.
+- Misc. 64bit fixes.
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2003.1-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
