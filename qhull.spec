@@ -1,7 +1,7 @@
 Summary: General dimension convex hull programs
 Name: qhull
 Version: 2003.1
-Release: 20%{?dist}
+Release: 21%{?dist}
 License: Qhull
 Group: System Environment/Libraries
 Source0: http://www.qhull.org/download/qhull-%{version}.tar.gz
@@ -88,6 +88,9 @@ install -m644 -D qhull.pc ${RPM_BUILD_ROOT}%{_libdir}/pkgconfig/qhull.pc
 
 
 %changelog
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2003.1-21
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Sun Mar 24 2013 Ralf Corsépius <corsepiu@fedoraproject.org> - 2003.1-20
 - Update config.sub,guess for aarch64 (RHBZ #926411).
 
