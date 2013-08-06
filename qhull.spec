@@ -1,7 +1,7 @@
 Summary: General dimension convex hull programs
 Name: qhull
 Version: 2003.1
-Release: 21%{?dist}
+Release: 22%{?dist}
 License: Qhull
 Group: System Environment/Libraries
 Source0: http://www.qhull.org/download/qhull-%{version}.tar.gz
@@ -15,6 +15,9 @@ Patch3: qhull-2003.1-64bit.patch
 Patch4: qhull-2003.1-config.patch
 
 URL: http://www.qhull.org
+
+# To be dropped when F19 reaches EOL
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
@@ -63,7 +66,7 @@ sed -e 's|@prefix@|%{_prefix}|' \
 
 %install
 make DESTDIR=$RPM_BUILD_ROOT \
-  docdir=%{_docdir}/%{name}-%{version} install
+  docdir=%{_pkgdocdir} install
 rm -f ${RPM_BUILD_ROOT}%{_libdir}/*.la
 
 install -m644 -D qhull.pc ${RPM_BUILD_ROOT}%{_libdir}/pkgconfig/qhull.pc
@@ -75,7 +78,7 @@ install -m644 -D qhull.pc ${RPM_BUILD_ROOT}%{_libdir}/pkgconfig/qhull.pc
 
 %files
 %defattr(-,root,root)
-%doc %{_docdir}/%{name}-%{version}
+%doc %{_pkgdocdir}
 %_bindir/*
 %_libdir/*.so.*
 %_mandir/man1/*
@@ -88,6 +91,10 @@ install -m644 -D qhull.pc ${RPM_BUILD_ROOT}%{_libdir}/pkgconfig/qhull.pc
 
 
 %changelog
+* Tue Aug 06 2013 Ralf Corsépius <corsepiu@fedoraproject.org> - 2003.1-22
+- Reflect docdir changes (RHBZ #993921).
+- Fix bogus %%changelog date.
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2003.1-21
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
@@ -149,7 +156,7 @@ install -m644 -D qhull.pc ${RPM_BUILD_ROOT}%{_libdir}/pkgconfig/qhull.pc
 * Sun May 22 2005 Jeremy Katz <katzj@redhat.com> - 2003.1-4
 - rebuild on all arches
 
-* Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
+* Wed Apr  6 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
 - rebuilt
 
 * Sun Aug 08 2004 Ralf Corsepius <ralf[AT]links2linux.de>	- 2003.1-0.fdr.2
