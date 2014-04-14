@@ -1,7 +1,7 @@
 Summary: General dimension convex hull programs
 Name: qhull
 Version: 2003.1
-Release: 22%{?dist}
+Release: 23%{?dist}
 License: Qhull
 Group: System Environment/Libraries
 Source0: http://www.qhull.org/download/qhull-%{version}.tar.gz
@@ -13,6 +13,7 @@ Patch2: qhull-2003.1-pkgconfig.patch
 Patch3: qhull-2003.1-64bit.patch
 # Update config.{guess,sub} for *-aarch64 (RHBZ #926411)
 Patch4: qhull-2003.1-config.patch
+Patch5: qhull-2003.1-format-security.patch
 
 URL: http://www.qhull.org
 
@@ -48,6 +49,7 @@ about a point.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 sed -i -e "s,\"../html/,\"html/,g" src/*.htm
 
 %build
@@ -91,6 +93,9 @@ install -m644 -D qhull.pc ${RPM_BUILD_ROOT}%{_libdir}/pkgconfig/qhull.pc
 
 
 %changelog
+* Mon Apr 14 2014 Jaromir Capik <jcapik@redhat.com> - 2003.1-23
+- Fixing format-security flaws (#1037293)
+
 * Tue Aug 06 2013 Ralf Corsépius <corsepiu@fedoraproject.org> - 2003.1-22
 - Reflect docdir changes (RHBZ #993921).
 - Fix bogus %%changelog date.
