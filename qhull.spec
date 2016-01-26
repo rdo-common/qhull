@@ -1,7 +1,7 @@
 Summary: General dimension convex hull programs
 Name: qhull
 Version: 2003.1
-Release: 26%{?dist}
+Release: 27%{?dist}
 License: Qhull
 Group: System Environment/Libraries
 Source0: http://www.qhull.org/download/qhull-%{version}.tar.gz
@@ -16,9 +16,6 @@ Patch4: qhull-2003.1-config.patch
 Patch5: qhull-2003.1-format-security.patch
 
 URL: http://www.qhull.org
-
-# To be dropped when F19 reaches EOL
-%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
@@ -79,20 +76,26 @@ install -m644 -D qhull.pc ${RPM_BUILD_ROOT}%{_libdir}/pkgconfig/qhull.pc
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root)
-%doc %{_pkgdocdir}
+%license COPYING.txt
 %_bindir/*
 %_libdir/*.so.*
 %_mandir/man1/*
 
 %files devel
-%defattr(-,root,root)
+%{_pkgdocdir}
+%exclude %{_pkgdocdir}/COPYING.txt
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/qhull.pc
 %{_includedir}/*
 
 
 %changelog
+* Tue Jan 26 2016 Ralf Corsépius <corsepiu@fedoraproject.org> - 2003.1-27
+- Remove %%defattr.
+- Add %%license.
+- Move docs into *-devel.
+- Cleanup spec.
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2003.1-26
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
