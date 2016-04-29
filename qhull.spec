@@ -1,24 +1,20 @@
+# Upstream's versioning is bizarre
+%global tarvers 2015-src-7.2.0
+
 Summary: General dimension convex hull programs
 Name: qhull
-Version: 2003.1
-Release: 28%{?dist}
+Version: 2015.2
+Release: 1%{?dist}
 License: Qhull
-Group: System Environment/Libraries
-Source0: http://www.qhull.org/download/qhull-%{version}.tar.gz
-Patch0: qhull-2003.1-alias.patch
-Patch1: http://www.qhull.org/download/qhull-2003.1-qh_gethash.patch
-# Add pkgconfig support
-Patch2: qhull-2003.1-pkgconfig.patch
-# Misc. fixes related to 64bit compliance
-Patch3: qhull-2003.1-64bit.patch
-# Update config.{guess,sub} for *-aarch64 (RHBZ #926411)
-Patch4: qhull-2003.1-config.patch
-Patch5: qhull-2003.1-format-security.patch
+Source0: http://www.qhull.org/download/qhull-%{tarvers}.tgz
+
+Patch1: 0001-Link-executables-against-shared-libs.patch
+Patch2: 0002-Install-docs-into-subdirs.patch
 
 URL: http://www.qhull.org
 
-Requires(post): /sbin/ldconfig
-Requires(postun): /sbin/ldconfig
+BuildRequires: cmake
+BuildRequires: chrpath
 
 %description
 Qhull is a general dimension convex hull program that reads a set
@@ -27,10 +23,29 @@ the points to stdout.  It also generates Delaunay triangulations, Voronoi
 diagrams, furthest-site Voronoi diagrams, and halfspace intersections
 about a point.
 
+%package -n libqhull
+Summary: -n libqhull
+
+%description -n libqhull
+%{summary}
+
+%package -n libqhull_r
+Summary: libqhull_r
+
+%description -n libqhull_r
+%{summary}
+
+%package -n libqhull_p
+Summary: libqhull_p
+
+%description -n libqhull_p
+%{summary}
+
 %package devel
-Group: Development/Libraries
 Summary: Development files for qhull
-Requires: %{name} = %{version}-%{release}
+Requires: lib%{name}%{?_isa} = %{version}-%{release}
+Requires: lib%{name}_r%{?_isa} = %{version}-%{release}
+Requires: lib%{name}_p%{?_isa} = %{version}-%{release}
 
 %description devel
 Qhull is a general dimension convex hull program that reads a set
@@ -41,55 +56,72 @@ about a point.
 
 %prep
 %setup -q -n %{name}-%{version}
-%patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-sed -i -e "s,\"../html/,\"html/,g" src/*.htm
 
 %build
-%configure --disable-static
-sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
-sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
-
-make
-
-sed -e 's|@prefix@|%{_prefix}|' \
-  -e 's|@exec_prefix@|%{_exec_prefix}|' \
-  -e 's|@includedir@|%{_includedir}|' \
-  -e 's|@libdir@|%{_libdir}|' \
-  -e 's|@VERSION@|%{version}|' \
-  qhull.pc.in > qhull.pc
+mkdir -p build
+cd build
+%cmake ..
+make VERBOSE=1 %{?_smp_mflags}
+cd ..
 
 %install
-make DESTDIR=$RPM_BUILD_ROOT \
-  docdir=%{_pkgdocdir} install
-rm -f ${RPM_BUILD_ROOT}%{_libdir}/*.la
+cd build
+make VERBOSE=1 DESTDIR=$RPM_BUILD_ROOT install
+cd ..
 
-install -m644 -D qhull.pc ${RPM_BUILD_ROOT}%{_libdir}/pkgconfig/qhull.pc
+chrpath --delete ${RPM_BUILD_ROOT}%{_libdir}/lib*.so.*
 
-
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
 
 %files
-%license COPYING.txt
-%_bindir/*
-%_libdir/*.so.*
-%_mandir/man1/*
-
-%files devel
 %{_pkgdocdir}
 %exclude %{_pkgdocdir}/COPYING.txt
+%exclude %{_pkgdocdir}/src/libqhull
+%exclude %{_pkgdocdir}/src/libqhull_r
+%license COPYING.txt
+%{_bindir}/*
+%{_mandir}/man1/*
+
+%files -n libqhull
+%{_libdir}/libqhull.so.*
+
+%post -n libqhull -p /sbin/ldconfig
+
+%postun -n libqhull -p /sbin/ldconfig
+
+
+%files -n libqhull_r
+%{_libdir}/libqhull_r.so.*
+
+%post -n libqhull_r -p /sbin/ldconfig
+
+%postun -n libqhull_r -p /sbin/ldconfig
+
+
+%files -n libqhull_p
+%{_libdir}/libqhull_p.so.*
+
+%post -n libqhull_p -p /sbin/ldconfig
+
+%postun -n libqhull_p -p /sbin/ldconfig
+
+
+%files devel
+%{_pkgdocdir}/src/libqhull
+%{_pkgdocdir}/src/libqhull_r
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/qhull.pc
 %{_includedir}/*
+%{_libdir}/libqhullcpp.a
+%exclude %{_libdir}/libqhullstatic*.a
 
 
 %changelog
+* Fri Apr 29 2016 Ralf Corsépius <corsepiu@fedoraproject.org> - 2015.2-1
+- Update to 2015.2-7.2.0.
+- Split out libqhull, libqhull_p, libqhull_r packages.
+- drop pkgconfig.
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 2003.1-28
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
