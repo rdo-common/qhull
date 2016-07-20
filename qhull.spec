@@ -1,5 +1,6 @@
 # Upstream's versioning is bizarre
 %global tarvers 2015-src-7.2.0
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}}
 
 Summary: General dimension convex hull programs
 Name: qhull
